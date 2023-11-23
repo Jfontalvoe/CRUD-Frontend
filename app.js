@@ -1,4 +1,4 @@
-var newMemberAddBtn = document.querySelector('.addMemberBtn'),
+var newMemberAddBtn = document.querySelector('.Registrar'),
 darkBg = document.querySelector('.dark_bg'),
 popupForm = document.querySelector('.popup'),
 crossBtn = document.querySelector('.closeBtn'),
@@ -211,8 +211,9 @@ function readInfo(pic, TipoDNI, No_documento, fname, sname, lname, Genero, BDate
     modalTitle.innerHTML = "Perfil"
     formInputFields.forEach(input => {
         input.disabled = true;
+        submitBtn.disabled = true;
     });
-    submitBtn.disabled = true;
+    
 
 
     imgHolder.style.pointerEvents = "none"
@@ -431,32 +432,43 @@ tabSize.addEventListener('change', ()=>{
 })
 
 
-//Filtrar
-filterData.addEventListener("input", ()=> {
-    const searchTerm = filterData.value.toLowerCase().trim()
+const searchButton = document.querySelector('.filter button');
+const clearButton = document.querySelector('.filter .clear-button');
 
-    if(searchTerm !== ""){
+searchButton.addEventListener('click', () => {
+    const searchTerm = filterData.value.toLowerCase().trim();
 
+    if (searchTerm !== "") {
         const filteredData = originalData.filter((item) => {
-            const no_documento = item.no_documentoVal.toLowerCase()
-            return(
-                no_documento.includes(searchTerm)
-            )
-        })
+            const no_documento = item.no_documentoVal.toLowerCase();
+            return no_documento.includes(searchTerm);
+        });
 
         // Update the current data with filtered data
-        getData = filteredData
+        getData = filteredData;
+    } else {
+        // Restablecer a todos los datos si no hay término de búsqueda
+        getData = originalData;
     }
 
-    else{
-        getData = JSON.parse(localStorage.getItem('userProfile')) || []
-    }
+    currentIndex = 1;
+    startIndex = 1;
+    displayIndexBtn();
+});
+
+clearButton.addEventListener('click', () => {
+    // Limpiar el campo de búsqueda
+    filterData.value = "";
+
+    // Restablecer a todos los datos
+    getData = originalData;
+
+    currentIndex = 1;
+    startIndex = 1;
+    displayIndexBtn();
+});
 
 
-    currentIndex = 1
-    startIndex = 1
-    displayIndexBtn()
-})
 
 
 displayIndexBtn()
