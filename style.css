@@ -12,7 +12,22 @@
     --dark8: #dae0e7;
     --dark9: #262a2e;
     --red1: #356f86;
+    --vecde: #00C4B0;
 }
+
+/* Estilos para el h1 */
+h1{
+    color:var(--dark8);
+    font-size: 42px;
+    text-shadow: 1px 1px 1px var(--vecde);
+}
+h2{
+    color:var(--dark8);
+    font-size: 28px;
+    text-shadow: 1px 1px 1px var(--vecde);
+}
+
+
 *{
     margin: 0;
     padding: 0;
@@ -408,4 +423,129 @@ input::-webkit-outer-spin-button{
     transform: scale(1);
     opacity: 1;
     visibility: visible;
+}
+
+
+/*------------------------------------------------------------*/
+
+/* Estilos para la vista de log */
+.log-container {
+    display: none;
+    padding: 20px;
+    box-shadow: 3px 3px 20px var(--dark1);
+    background: var(--dark3);
+    border-radius: 10px;
+    margin: 10px;
+    margin-top: 50px;
+}
+
+.log-container h1 {
+    color: var(--dark8);
+    margin-bottom: 20px;
+}
+
+.filterLog {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.filterLog label {
+    margin-right: 10px;
+    color: var(--dark8);
+}
+
+.filterLog input,
+.filterLog select {
+    padding: 7px 10px;
+    border: 1px solid var(--dark6);
+    color: var(--dark8);
+    background: var(--dark4);
+    border-radius: 5px;
+    outline: none;
+    transition: 0.3s;
+    cursor: pointer;
+}
+
+.filterLog select {
+    padding: 5px 10px;
+}
+
+.filterLog button, .filterLog .clear-button {
+    margin-right: 10px;
+    padding: 7px 10px;
+    border: 1px solid var(--dark6);
+    color: var(--dark8);
+    background: var(--dark4);
+    border-radius: 5px;
+    outline: none;
+    transition: 0.3s;
+    cursor: pointer;
+}
+
+.logTable {
+    border-collapse: collapse;
+    text-align: left;
+    width: 100%;
+    margin-top: 20px;
+}
+
+.logTable .heading {
+    background: var(--dark5);
+    color: var(--dark8);
+}
+
+.logTable .heading th:hover {
+    background: var(--dark4);
+    transition: 0.3s;
+}
+
+.logTable tr th,
+.logTable tr td {
+    padding: 12px 15px;
+    color: var(--dark8);
+    vertical-align: middle;
+}
+
+.logTable tr td {
+    border-bottom: 1px solid var(--dark6);
+}
+
+.logTable tbody tr:first-child td {
+    border-top: 1px solid var(--dark6);
+}
+
+.logTable tbody tr:nth-child(odd) {
+    background: var(--dark9);
+}
+
+.logTable tbody tr:nth-child(odd) > td:nth-child(3) {
+    background: var(--dark4);
+}
+
+.logTable tr:hover {
+    cursor: pointer;
+    background: var(--dark9);
+}
+
+.logTable tr .empty {
+    padding: 6px;
+    background: var(--dark9);
+}
+
+.log-container button {
+    margin-top: 20px;
+    padding: 10px;
+    color: var(--dark8);
+    background: var(--dark4);
+    border: 1px solid var(--dark6);
+    border-radius: 5px;
+    cursor: pointer;
+    outline: none;
+    transition: 0.3s;
+}
+
+.log-container button:hover {
+    background: var(--dark5);
 }
