@@ -266,8 +266,46 @@ function editInfo(id, pic, TipoDNI, No_documento, fname, sname, lname, Genero, B
 
 
     imgHolder.style.pointerEvents = "auto"
+    submitBtn.addEventListener('click', handleUpdate);
 }
 
+// Función para manejar la actualización
+function handleUpdate() {
+const information = {
+    id: Date.now(),
+    picture: imgInput.src == undefined ? "./img/pic1.png" :imgInput.src,
+    tipoDNIVal: tipoDNI.value,
+    no_documentoVal: no_documento.value,
+    fName: fName.value,
+    sName: sName.value,
+    lName: lName.value,
+    generoVal: genero.value,
+    bDateVal: bDate.value,
+    emailVal: email.value,
+    phoneVal: phone.value
+}
+
+if(!isEdit){
+    originalData.unshift(information)
+}
+else{
+    originalData[editId] = information
+}
+getData = [...originalData]
+localStorage.setItem('userProfile', JSON.stringify(originalData))
+
+darkBg.classList.remove('active')
+popupForm.classList.remove('active')
+form.reset()
+
+
+highlightIndexBtn()
+displayIndexBtn()
+showInfo()
+
+// Eliminar el controlador de eventos para evitar múltiples asignaciones
+submitBtn.removeEventListener('click', handleUpdate);
+}
 // Eliminar datos
 function deleteInfo(index){
     if(confirm("Estás seguro que quieres eliminar este registro?")){
