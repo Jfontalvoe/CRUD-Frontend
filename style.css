@@ -21,6 +21,8 @@
 }
 
 body{
+    transform: scale(0.85);
+    transform-origin: center;
     display: flex;
     justify-content: center;
     align-items: flex-start;

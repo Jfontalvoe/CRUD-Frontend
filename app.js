@@ -210,8 +210,9 @@ function readInfo(pic, TipoDNI, No_documento, fname, sname, lname, Genero, BDate
     popupFooter.style.display = "none"
     modalTitle.innerHTML = "Perfil"
     formInputFields.forEach(input => {
-        input.disabled = true
-    })
+        input.disabled = true;
+    });
+    submitBtn.disabled = true;
 
 
     imgHolder.style.pointerEvents = "none"
