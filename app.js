@@ -1,4 +1,4 @@
-var newMemberAddBtn = document.querySelector('.addMemberBt button.addMemberBtn'),
+var newMemberAddBtn = document.querySelector('.Registrar'),
 darkBg = document.querySelector('.dark_bg'),
 popupForm = document.querySelector('.popup'),
 crossBtn = document.querySelector('.closeBtn'),
@@ -211,9 +211,9 @@ function readInfo(pic, TipoDNI, No_documento, fname, sname, lname, Genero, BDate
     modalTitle.innerHTML = "Perfil"
     formInputFields.forEach(input => {
         input.disabled = true;
-       
+        submitBtn.disabled = true;
     });
-    submitBtn.disabled = true;
+    
 
 
     imgHolder.style.pointerEvents = "none"
@@ -260,51 +260,12 @@ function editInfo(id, pic, TipoDNI, No_documento, fname, sname, lname, Genero, B
     popupFooter.style.display = "block"
     modalTitle.innerHTML = "Editar información"
     submitBtn.innerHTML = "Actualizar"
-    submitBtn.disabled = false;
-
     formInputFields.forEach(input => {
-        input.disabled = false;
-    });
+        input.disabled = false
+    })
+
+
     imgHolder.style.pointerEvents = "auto"
-    submitBtn.addEventListener('click', handleUpdate);
-}
-
-// Función para manejar la actualización
-function handleUpdate() {
-    const information = {
-        id: Date.now(),
-        picture: imgInput.src == undefined ? "./img/pic1.png" :imgInput.src,
-        tipoDNIVal: tipoDNI.value,
-        no_documentoVal: no_documento.value,
-        fName: fName.value,
-        sName: sName.value,
-        lName: lName.value,
-        generoVal: genero.value,
-        bDateVal: bDate.value,
-        emailVal: email.value,
-        phoneVal: phone.value
-    }
-
-    if(!isEdit){
-        originalData.unshift(information)
-    }
-    else{
-        originalData[editId] = information
-    }
-    getData = [...originalData]
-    localStorage.setItem('userProfile', JSON.stringify(originalData))
-
-    darkBg.classList.remove('active')
-    popupForm.classList.remove('active')
-    form.reset()
-
-
-    highlightIndexBtn()
-    displayIndexBtn()
-    showInfo()
-
-    // Eliminar el controlador de eventos para evitar múltiples asignaciones
-    submitBtn.removeEventListener('click', handleUpdate);
 }
 
 // Eliminar datos
@@ -507,7 +468,69 @@ clearButton.addEventListener('click', () => {
     displayIndexBtn();
 });
 
-
-
-
 displayIndexBtn()
+
+
+// INICIO LOG
+var logBtn = document.getElementById('logBtn');
+
+// Manejar clic en el botón de log
+logBtn.addEventListener('click', () => {
+    // Ocultar la vista principal
+    document.querySelector('.container').style.display = 'none';
+
+    // Mostrar la vista de log
+    document.querySelector('.log-container').style.display = 'block';
+
+    // Lógica para mostrar el log en la nueva vista
+    showLogInfo();
+});
+
+// Lógica para mostrar el log en la nueva vista
+function showLogInfo() {
+    // ... (puedes agregar lógica de filtrado y mostrar la tabla del log aquí)
+
+    // Ejemplo: Mostrar una entrada en el log
+    let logEntry = {
+        no_documento: '1129524368',
+        tipo_documento: 'Tarjeta de identidad',
+        nombre_completo: 'Jonathan Stiven Fontalvo Aparicio',
+        accion: 'Se registró'
+    };
+
+    // Limpiar la tabla del log
+    document.querySelector('.logTable tbody').innerHTML = '';
+
+    // Mostrar la entrada en la tabla del log
+    document.querySelector('.logTable tbody').innerHTML += `
+        <tr>
+            <td>${logEntry.no_documento}</td>
+            <td>${logEntry.tipo_documento}</td>
+            <td>${logEntry.nombre_completo}</td>
+            <td>${logEntry.accion}</td>
+        </tr>
+    `;
+}
+
+// Función para filtrar el log
+function filterLog() {
+    // Implementa la lógica de filtrado del log aquí
+    // Puedes usar los valores de #searchLog y #tipoDocumentoLog
+}
+
+// Función para limpiar los filtros del log
+function clearLogFilters() {
+    document.getElementById('searchLog').value = '';
+    document.getElementById('tipoDocumentoLog').value = '';
+    // Llamar a la función de filtrado para mostrar todos los registros
+    filterLog();
+}
+
+// Función para volver a la vista principal
+function goBack() {
+    // Ocultar la vista de log
+    document.querySelector('.log-container').style.display = 'none';
+    // Mostrar la vista principal
+    document.querySelector('.container').style.display = 'block';
+}
+

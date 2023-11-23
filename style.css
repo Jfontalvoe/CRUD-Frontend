@@ -111,11 +111,11 @@ body{
     border-color: var(--dark7);
 }
 
-.container header .addMemberBt {
+.container header .addMemberBtn {
     margin-bottom: 15px;
 }
 
-header .addMemberBt button {
+header .addMemberBtn button {
     margin-right: 10px; /* Ajusta la cantidad de espacio entre los botones */
     padding: 9px 14px;
     color: var(--dark8);
@@ -128,7 +128,6 @@ header .addMemberBt button {
     background: var(--dark4);
     border-radius: 5px;
 }
-
 
 
 .container table{
