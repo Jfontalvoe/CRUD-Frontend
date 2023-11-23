@@ -15,7 +15,7 @@
     <div class="container">
 
         <header>
-            <h1>Log de Acciones </h1>
+
             <div class="filterEntries">
                 <div class="entries">
                     Mostrar <select name="" id="table_size">
@@ -33,9 +33,9 @@
                 </div>
             </div>
 
-            <div class="addMemberBtn">
-                <button class="Registrar">Registrar</button>
-                <button id="logBtn">Log</button>
+            <div class="addMemberBt">
+                <button class="addMemberBtn">Registrar</button>
+                <button>Log</button>
             </div>
         </header>
 
@@ -253,42 +253,6 @@
         </div>
 
     </div>
-
-    <!-- Nueva vista para el log -->
-<div class="log-container" style="display: none;">
-    <h1>Log de Acciones</h1>
-
-    <!-- Filtros para buscar en el log -->
-    <div class="filterLog">
-        <label for="searchLog">No. Documento:</label>
-        <input type="search" name="" id="searchLog" placeholder="No. documento">
-        <label for="tipoDocumentoLog">Tipo de Documento:</label>
-        <select id="tipoDocumentoLog">
-            <option value="">Seleccionar</option>
-            <option value="Cédula">Cédula</option>
-            <option value="Tarjeta de Identidad">Tarjeta de identidad</option>
-        </select>
-        <button onclick="filterLog()">Buscar</button>
-        <button class="clear-button" onclick="clearLogFilters()">Limpiar</button>
-    </div>
-
-    <!-- Tabla para mostrar el log -->
-    <table class="logTable">
-        <thead>
-            <tr class="heading">
-                <th>No. Documento</th>
-                <th>Tipo de Documento</th>
-                <th>Nombre Completo</th>
-                <th>Acción</th>
-            </tr>
-        </thead>
-        <tbody>
-            <!-- Aquí se llenarán las filas del log -->
-        </tbody>
-    </table>
-
-    <button onclick="goBack()">Volver a la vista principal</button>
-</div>
 
 
     <script src="app.js"></script>
