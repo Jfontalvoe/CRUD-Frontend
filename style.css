@@ -115,7 +115,7 @@ body{
     margin-bottom: 15px;
 }
 
-header .addMemberBtn button {
+header .addMemberBt button {
     margin-right: 10px; /* Ajusta la cantidad de espacio entre los botones */
     padding: 9px 14px;
     color: var(--dark8);
