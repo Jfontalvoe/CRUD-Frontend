@@ -7,7 +7,7 @@ var newMemberAddBtn = document.querySelector('.addMemberBt button.addMemberBtn')
     popupFooter = document.querySelector('.popupFooter'),
     imgInput = document.querySelector('.img'),
     imgHolder = document.querySelector('.imgholder')
-form = document.querySelector('form'),
+    form = document.querySelector('form'),
     formInputFields = document.querySelectorAll('form input'),
     uploadimg = document.querySelector("#uploadimg"),
     tipoDNI = document.getElementById("tipoDNI"),
@@ -258,16 +258,16 @@ function editInfo(id, pic, TipoDNI, No_documento, fname, sname, lname, Genero, B
 function handleUpdate() {
     const information = {
         id: Date.now(),
-        picture: imgInput.src == undefined ? "./img/pic1.png" : imgInput.src,
+        Foto: imgInput.src == undefined ? "./img/pic1.png" : imgInput.src,
         TipoDocumento: tipoDNI.value,
-        NumeroDocumento: no_documento.value,
-        PrimerNombre: fName.value,
-        SegundoNombre: sName.value,
-        Apellidos: lName.value,
-        Genero: genero.value,
-        FechaNacimiento: bDate.value,
-        CorreoElectronico: email.value,
-        Celular: phone.value
+        NumeroDocumento: No_documento.value,
+        PrimerNombre: fname.value,
+        SegundoNombre: sname.value,
+        Apellidos: lname.value,
+        Genero: Genero.value,
+        FechaNacimiento: BDate.value,
+        CorreoElectronico: Email.value,
+        Celular: Phonevalue
     }
 
     if (!isEdit) {
@@ -335,10 +335,11 @@ function deleteInfo(index) {
 // Registrar en el form
 form.addEventListener('submit', (e) => {
     e.preventDefault()
+    // Crear un objeto FormData para enviar datos y archivos
+    const formData = new FormData();
 
     const information = {
-        id: Date.now(),
-        picture: imgInput.src == undefined ? "./img/pic1.png" : imgInput.src,
+        Foto: imgInput.src == undefined ? "./img/pic1.png" : imgInput.src,
         TipoDocumento: tipoDNI.value,
         NumeroDocumento: no_documento.value,
         PrimerNombre: fName.value,
@@ -348,15 +349,37 @@ form.addEventListener('submit', (e) => {
         FechaNacimiento: bDate.value,
         CorreoElectronico: email.value,
         Celular: phone.value
+    };
+
+    // Agregar los datos del formulario al objeto FormData
+    for (const key in information) {
+        formData.append(key, information[key]);
     }
+
+    fetch('http://localhost:4001/registrar', {
+        method: 'POST',
+        body: formData,
+    })
+    .then(response => response.json())
+    .then(data => {
+        // Manejar la respuesta del servidor
+        console.log(data);
+    })
+    .catch(error => {
+        // Manejar errores de la solicitud
+        console.error('Error en la solicitud:', error);
+    });
     if (!isEdit) {
         originalData.unshift(information)
     }
     else {
         originalData[editId] = information
     }
+
+
+
     getData = [...originalData]
-    localStorage.setItem('userProfile', JSON.stringify(originalData))
+    
 
     submitBtn.innerHTML = "Registrar"
     modalTitle.innerHTML = "Registrar persona"
@@ -464,7 +487,6 @@ searchButton.addEventListener('click', () => {
     if (searchTerm !== "") {
         const no_documento = searchTerm;
         console.log(no_documento);
-            console.log(`http://localhost:4002/consultar/${no_documento}`);
             fetch(`http://localhost:4002/consultar/${no_documento}`, {
                 method: 'GET',
                 headers: {
