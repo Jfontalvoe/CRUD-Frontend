@@ -157,20 +157,20 @@ function showInfo() {
             if (staff) {
                 let createElement = `<tr class = "employeeDetails">
                 <td>${i + 1}</td>
-                <td><img src="${staff.picture}" alt="" width="40" height="40"></td>
-                <td>${staff.tipoDNIVal}</td>
-                <td>${staff.no_documentoVal}</td>
-                <td>${staff.fName}</td>
-                <td>${staff.sName}</td>
-                <td>${staff.lName}</td>
-                <td>${staff.generoVal}</td>
-                <td>${staff.bDateVal}</td>
-                <td>${staff.emailVal}</td>
-                <td>${staff.phoneVal}</td>
+                <td><img src="${staff.Foto}" alt="" width="40" height="40"></td>
+                <td>${staff.TipoDocumento}</td>
+                <td>${staff.NumeroDocumento}</td>
+                <td>${staff.PrimerNombre}</td>
+                <td>${staff.SegundoNombre}</td>
+                <td>${staff.Apellidos}</td>
+                <td>${staff.Genero}</td>
+                <td>${staff.FechaNacimiento}</td>
+                <td>${staff.CorreoElectronico}</td>
+                <td>${staff.Celular}</td>
                 <td>
-                    <button onclick="readInfo('${staff.picture}', '${staff.tipoDNIVal}', '${staff.no_documentoVal}', '${staff.fName}', '${staff.sName}', '${staff.lName}', '${staff.generoVal}', '${staff.bDateVal}', '${staff.emailVal}', '${staff.phoneVal}')"><i class="fa-regular fa-eye"></i></button>
+                    <button onclick="readInfo('${staff.Foto}','${staff.TipoDocumento}', '${staff.NumeroDocumento}', '${staff.PrimerNombre}', '${staff.SegundoNombre}', '${staff.Apellidos}', '${staff.Genero}', '${staff.FechaNacimiento}', '${staff.CorreoElectronico}', '${staff.Celular}')"><i class="fa-regular fa-eye"></i></button>
 
-                    <button onclick="editInfo('${i}', '${staff.picture}', '${staff.tipoDNIVal}', '${staff.no_documentoVal}', '${staff.fName}', '${staff.sName}', '${staff.lName}', '${staff.generoVal}', '${staff.bDateVal}', '${staff.emailVal}', '${staff.phoneVal}')"><i class="fa-regular fa-pen-to-square"></i></button>
+                    <button onclick="editInfo('${i}','${staff.Foto}', '${staff.TipoDocumento}', '${staff.NumeroDocumento}', '${staff.PrimerNombre}', '${staff.SegundoNombre}', '${staff.Apellidos}', '${staff.Genero}', '${staff.FechaNacimiento}', '${staff.CorreoElectronico}', '${staff.Celular}')"><i class="fa-regular fa-pen-to-square"></i></button>
 
 
                     <button onclick = "deleteInfo(${i})"><i class="fa-regular fa-trash-can"></i></button>
@@ -225,24 +225,8 @@ function readInfo(pic, TipoDNI, No_documento, fname, sname, lname, Genero, BDate
 function editInfo(id, pic, TipoDNI, No_documento, fname, sname, lname, Genero, BDate, Email, Phone) {
     isEdit = true
     editId = id
-
     // Find the index of the item to edit in the original data based on id
     const originalIndex = originalData.findIndex(item => item.id === id)
-
-    // Update the original data
-    originalData[originalIndex] = {
-        id: id,
-        picture: pic,
-        tipoDNIVal: TipoDNI,
-        no_documentoVal: No_documento,
-        fName: fname,
-        sName: sname,
-        lName: lname,
-        generoVal: Genero,
-        bDateVal: BDate,
-        emailVal: Email,
-        phoneVal: Phone
-    }
 
     imgInput.src = pic
     tipoDNI.value = TipoDNI
@@ -275,15 +259,15 @@ function handleUpdate() {
     const information = {
         id: Date.now(),
         picture: imgInput.src == undefined ? "./img/pic1.png" : imgInput.src,
-        tipoDNIVal: tipoDNI.value,
-        no_documentoVal: no_documento.value,
-        fName: fName.value,
-        sName: sName.value,
-        lName: lName.value,
-        generoVal: genero.value,
-        bDateVal: bDate.value,
-        emailVal: email.value,
-        phoneVal: phone.value
+        TipoDocumento: tipoDNI.value,
+        NumeroDocumento: no_documento.value,
+        PrimerNombre: fName.value,
+        SegundoNombre: sName.value,
+        Apellidos: lName.value,
+        Genero: genero.value,
+        FechaNacimiento: bDate.value,
+        CorreoElectronico: email.value,
+        Celular: phone.value
     }
 
     if (!isEdit) {
@@ -355,15 +339,15 @@ form.addEventListener('submit', (e) => {
     const information = {
         id: Date.now(),
         picture: imgInput.src == undefined ? "./img/pic1.png" : imgInput.src,
-        tipoDNIVal: tipoDNI.value,
-        no_documentoVal: no_documento.value,
-        fName: fName.value,
-        sName: sName.value,
-        lName: lName.value,
-        generoVal: genero.value,
-        bDateVal: bDate.value,
-        emailVal: email.value,
-        phoneVal: phone.value
+        TipoDocumento: tipoDNI.value,
+        NumeroDocumento: no_documento.value,
+        PrimerNombre: fName.value,
+        SegundoNombre: sName.value,
+        Apellidos: lName.value,
+        Genero: genero.value,
+        FechaNacimiento: bDate.value,
+        CorreoElectronico: email.value,
+        Celular: phone.value
     }
     if (!isEdit) {
         originalData.unshift(information)
@@ -476,14 +460,34 @@ const clearButton = document.querySelector('.filter .clear-button');
 searchButton.addEventListener('click', () => {
     const searchTerm = filterData.value.toLowerCase().trim();
 
-    if (searchTerm !== "") {
-        const filteredData = originalData.filter((item) => {
-            const no_documento = item.no_documentoVal.toLowerCase();
-            return no_documento.includes(searchTerm);
-        });
 
-        // Update the current data with filtered data
-        getData = filteredData;
+    if (searchTerm !== "") {
+        const no_documento = searchTerm;
+        console.log(no_documento);
+            console.log(`http://localhost:4002/consultar/${no_documento}`);
+            fetch(`http://localhost:4002/consultar/${no_documento}`, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+            })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error(`Error en la solicitud: ${response.status}`);
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    // Manipula los datos de la respuesta aquí  
+                    console.log(data);
+                    // Puedes retornar data aquí si es necesario
+                    getData=[data];
+                })
+                .catch(error => {
+                    console.error('Error al buscar usuario:', error);
+                    // Maneja el error, muestra un mensaje, etc.
+                });
+        
     } else {
         // Restablecer a todos los datos si no hay término de búsqueda
         getData = originalData;
@@ -637,4 +641,3 @@ function goBack() {
     // Mostrar la vista principal
     document.querySelector('.container').style.display = 'block';
 }
-
