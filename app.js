@@ -7,7 +7,7 @@ var newMemberAddBtn = document.querySelector('.addMemberBt button.addMemberBtn')
     popupFooter = document.querySelector('.popupFooter'),
     imgInput = document.querySelector('.img'),
     imgHolder = document.querySelector('.imgholder')
-    form = document.querySelector('form'),
+form = document.querySelector('form'),
     formInputFields = document.querySelectorAll('form input'),
     uploadimg = document.querySelector("#uploadimg"),
     tipoDNI = document.getElementById("tipoDNI"),
@@ -23,7 +23,9 @@ var newMemberAddBtn = document.querySelector('.addMemberBt button.addMemberBtn')
     tabSize = document.getElementById("table_size"),
     userInfo = document.querySelector(".userInfo"),
     table = document.querySelector("table"),
-    filterData = document.getElementById("search")
+    filterData = document.getElementById("search"),
+    getBtn = document.getElementById("getBtn")
+
 
 let originalData = localStorage.getItem('userProfile') ? JSON.parse(localStorage.getItem('userProfile')) : []
 let getData = [...originalData]
@@ -112,6 +114,7 @@ function displayIndexBtn() {
 }
 
 
+
 function highlightIndexBtn() {
     startIndex = ((currentIndex - 1) * tableSize) + 1
     endIndex = (startIndex + tableSize) - 1
@@ -173,7 +176,7 @@ function showInfo() {
                     <button onclick="editInfo('${i}','${staff.Foto}', '${staff.TipoDocumento}', '${staff.NumeroDocumento}', '${staff.PrimerNombre}', '${staff.SegundoNombre}', '${staff.Apellidos}', '${staff.Genero}', '${staff.FechaNacimiento}', '${staff.CorreoElectronico}', '${staff.Celular}')"><i class="fa-regular fa-pen-to-square"></i></button>
 
 
-                    <button onclick = "deleteInfo(${i})"><i class="fa-regular fa-trash-can"></i></button>
+                    <button onclick = "deleteInfo(${i},'${staff.NumeroDocumento}')"><i class="fa-regular fa-trash-can"></i></button>
                 </td>
             </tr>`
 
@@ -225,9 +228,11 @@ function readInfo(pic, TipoDNI, No_documento, fname, sname, lname, Genero, BDate
 function editInfo(id, pic, TipoDNI, No_documento, fname, sname, lname, Genero, BDate, Email, Phone) {
     isEdit = true
     editId = id
+
     // Find the index of the item to edit in the original data based on id
     const originalIndex = originalData.findIndex(item => item.id === id)
 
+    // Update the original data
     imgInput.src = pic
     tipoDNI.value = TipoDNI
     no_documento.value = No_documento
@@ -255,20 +260,67 @@ function editInfo(id, pic, TipoDNI, No_documento, fname, sname, lname, Genero, B
 }
 
 // Función para manejar la actualización
-function handleUpdate() {
+function handleUpdate(e) {
+    e.preventDefault();
+    const fotoInput = document.getElementById('uploadimg');
+    const formData = new FormData();
+
     const information = {
         id: Date.now(),
         Foto: imgInput.src == undefined ? "./img/pic1.png" : imgInput.src,
         TipoDocumento: tipoDNI.value,
-        NumeroDocumento: No_documento.value,
-        PrimerNombre: fname.value,
-        SegundoNombre: sname.value,
-        Apellidos: lname.value,
-        Genero: Genero.value,
-        FechaNacimiento: BDate.value,
-        CorreoElectronico: Email.value,
-        Celular: Phonevalue
+        NumeroDocumento: no_documento.value,
+        PrimerNombre: fName.value,
+        SegundoNombre: sName.value,
+        Apellidos: lName.value,
+        Genero: genero.value,
+        FechaNacimiento: bDate.value,
+        CorreoElectronico: email.value,
+        Celular: phone.value
     }
+    var rutaImagen = '../img/pic1.png';
+
+    var miImagen = new Image();
+    miImagen.src = rutaImagen;
+
+
+    const information2 = {
+        // Foto: fotoInput.files.length > 0 && fotoInput.files[0].type.startsWith('image/') ? fotoInput.files[0] : miImagen.src,    
+        TipoDocumento: tipoDNI.value,
+        NumeroDocumento: no_documento.value,
+        PrimerNombre: fName.value,
+        SegundoNombre: sName.value,
+        Apellidos: lName.value,
+        Genero: genero.value,
+        FechaNacimiento: bDate.value,
+        CorreoElectronico: email.value,
+        Celular: phone.value
+    };
+
+    // Agregar los datos del formulario al objeto FormData
+    for (const key in information2) {
+        formData.append(key, information2[key]);
+    }
+
+    // Número de documento para la URL
+
+    // Realizar la solicitud PUT
+    fetch(`http://localhost:4004/actualizar/${no_documento.value}`, {
+        method: 'PUT',
+        body: formData,
+    })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`HTTP error! Status: ${response.status}`);
+            }
+            return response.json();
+        })
+        .then(data => {
+            console.log('Success:', data);
+        })
+        .catch(error => {
+            console.error('Error:', error);
+        });
 
     if (!isEdit) {
         originalData.unshift(information)
@@ -292,10 +344,28 @@ function handleUpdate() {
     submitBtn.removeEventListener('click', handleUpdate);
 }
 // Eliminar datos
-function deleteInfo(index) {
+function deleteInfo(index, num_documento) {
     if (confirm("Estás seguro que quieres eliminar este registro?")) {
         originalData.splice(index, 1);
         localStorage.setItem("userProfile", JSON.stringify(originalData));
+        console.log("deleting: " + num_documento);
+        fetch(`http://127.0.0.1:4003/borrar/${num_documento}`, {
+            method: 'DELETE',
+        })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`HTTP error! Status: ${response.status}`);
+                }
+                return response.json();
+            })
+            .then(data => {
+                console.log('Borrado exitoso:', data);
+                // Realiza cualquier acción adicional después de un borrado exitoso
+            })
+            .catch(error => {
+                console.error('Error al borrar:', error);
+                // Realiza acciones adicionales en caso de error
+            });
 
         // Update getData after deleting the record
         getData = [...originalData];
@@ -332,10 +402,13 @@ function deleteInfo(index) {
     }
 }
 
+
+
 // Registrar en el form
 form.addEventListener('submit', (e) => {
     e.preventDefault()
     // Crear un objeto FormData para enviar datos y archivos
+    const fotoInput = document.getElementById('uploadimg');
     const formData = new FormData();
 
     const information = {
@@ -351,24 +424,37 @@ form.addEventListener('submit', (e) => {
         Celular: phone.value
     };
 
+    const information2 = {
+        Foto: fotoInput.files.length > 0 ? fotoInput.files[0] : null,
+        TipoDocumento: tipoDNI.value,
+        NumeroDocumento: no_documento.value,
+        PrimerNombre: fName.value,
+        SegundoNombre: sName.value,
+        Apellidos: lName.value,
+        Genero: genero.value,
+        FechaNacimiento: bDate.value,
+        CorreoElectronico: email.value,
+        Celular: phone.value
+    };
+
     // Agregar los datos del formulario al objeto FormData
-    for (const key in information) {
-        formData.append(key, information[key]);
+    for (const key in information2) {
+        formData.append(key, information2[key]);
     }
 
-    fetch('http://localhost:4001/registrar', {
+    fetch('http://127.0.0.1:4001/registrar', {
         method: 'POST',
         body: formData,
     })
-    .then(response => response.json())
-    .then(data => {
-        // Manejar la respuesta del servidor
-        console.log(data);
-    })
-    .catch(error => {
-        // Manejar errores de la solicitud
-        console.error('Error en la solicitud:', error);
-    });
+        .then(response => response.json())
+        .then(data => {
+            // Manejar la respuesta del servidor
+            console.log(data);
+        })
+        .catch(error => {
+            // Manejar errores de la solicitud
+            console.error('Error en la solicitud:', error);
+        });
     if (!isEdit) {
         originalData.unshift(information)
     }
@@ -379,7 +465,7 @@ form.addEventListener('submit', (e) => {
 
 
     getData = [...originalData]
-    
+
 
     submitBtn.innerHTML = "Registrar"
     modalTitle.innerHTML = "Registrar persona"
@@ -480,36 +566,91 @@ tabSize.addEventListener('change', () => {
 const searchButton = document.querySelector('.filter button');
 const clearButton = document.querySelector('.filter .clear-button');
 
+getBtn.addEventListener('click', () => {
+    fetch('http://127.0.0.1:4002/consultarall', {
+        method: 'GET',
+    })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`Error en la solicitud: ${response.status}`);
+            }
+            return response.json();
+        })
+        .then(data => {
+            // Inicializar el array getData con los datos obtenidos
+            originalData = data;
+            getData = [...originalData];
+        })
+        .then(() => {
+            // Realizar cualquier otra lógica necesaria después de obtener los datos e imágenes
+            preLoadCalculations();
+            displayIndexBtn();
+            showInfo();
+        })
+        .catch(error => {
+            console.error('Error al obtener datos:', error);
+            // Manejar el error, mostrar un mensaje, etc.
+        });
+
+});
+
 searchButton.addEventListener('click', () => {
     const searchTerm = filterData.value.toLowerCase().trim();
 
 
     if (searchTerm !== "") {
         const no_documento = searchTerm;
-        console.log(no_documento);
-            fetch(`http://localhost:4002/consultar/${no_documento}`, {
-                method: 'GET',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
+        console.log("doing first fetch to document: " + no_documento);
+        fetch(`http://127.0.0.1:4002/consultar/${no_documento}`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+        })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`Error en la solicitud: ${response.status}`);
+                }
+                return response.json();
             })
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error(`Error en la solicitud: ${response.status}`);
-                    }
-                    return response.json();
-                })
-                .then(data => {
-                    // Manipula los datos de la respuesta aquí  
-                    console.log(data);
-                    // Puedes retornar data aquí si es necesario
-                    getData=[data];
-                })
-                .catch(error => {
-                    console.error('Error al buscar usuario:', error);
-                    // Maneja el error, muestra un mensaje, etc.
+            .then(data => {
+                // Manipula los datos de la respuesta aquí  
+                console.log(data);
+                // Puedes retornar data aquí si es necesario
+                getData = [data];// Realiza el segundo fetch después del primer fetch
+                console.log("doing second fetch to document: " + no_documento);
+                return fetch(`http://127.0.0.1:4002/obtener_foto/${no_documento}`, {
+                    method: 'GET',
+                    headers: {
+                        Accept: 'image/*', // Especifica el tipo de contenido esperado
+                    },
                 });
-        
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`Error en la solicitud: ${response.status}`);
+                }
+
+                // Verifica si el tipo de contenido es una imagen
+                if (response.headers.get('content-type').startsWith('image/')) {
+                    return response.blob(); // Retorna el blob de la imagen
+                } else {
+                    throw new Error('La respuesta no es una imagen');
+                }
+            })
+            .then(blob => {
+                // Crea una URL para la imagen
+                getData[0]['Foto'] = URL.createObjectURL(blob);
+            })
+            .catch(error => {
+                console.error('Error al buscar usuario:', error);
+                // Maneja el error, muestra un mensaje, etc.
+            })
+            .finally(() => {
+                console.log("Both fetch operations completed");
+            });
+        console.log("finished second fetch to document: " + no_documento);
+
     } else {
         // Restablecer a todos los datos si no hay término de búsqueda
         getData = originalData;

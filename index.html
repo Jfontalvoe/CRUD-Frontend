@@ -15,7 +15,7 @@
     <div class="container">
 
         <header>
-            <h1>Log de Acciones </h1>
+            <h1>Gestión de Datos</h1>
             <div class="filterEntries">
                 <div class="entries">
                     Mostrar <select name="" id="table_size">
@@ -36,6 +36,7 @@
             <div class="addMemberBt">
                 <button class="addMemberBtn">Registrar</button>
                 <button id="logBtn">Log</button>
+                <button id="getBtn">Obtener datos</button>
             </div>
         </header>
 
@@ -168,10 +169,10 @@
              </header>
 
              <div class="body">
-                <form action="#" id="myForm">
+                <form action="#" id="myForm" enctype="multipart/form-data">
                     <div class="imgholder">
                         <label for="uploadimg" class="upload">
-                            <input type="file" name="" id="uploadimg" class="picture" required>
+                            <input type="file" name="profilePicture" id="uploadimg" class="picture" accept="image/*" required>
                             <i class="fa-solid fa-plus"></i>
                         </label>
                         <img src="./img/pic1.png" alt="" width="150" height="150" class="img">
